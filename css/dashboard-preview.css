@@ -1,0 +1,28 @@
+/* Dark mode rendered dashboard mockup */
+.dashboard-preview {
+    background: #1A365D;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    color: white;
+}
+
+.chart-area {
+    height: 200px;
+    background: linear-gradient(45deg, #2B6CB0, #4299E1);
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.data-card {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+}
