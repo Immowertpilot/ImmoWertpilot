@@ -8,4 +8,4 @@ ImmoWertpilot is a comprehensive property valuation and investment analysis tool
 
 ## Live Demo
 
-Check out the live version: [https://immowertpilot.github.io/](https://immowertpilot.github.io/)
+Check out the live version: [https://immowertpilot.github.io/ImmoWertpilot/](https://immowertpilot.github.io/ImmoWertpilot/)
