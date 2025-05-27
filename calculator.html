@@ -6,363 +6,10 @@
     <title>Immobilien-Wertermittlung | Property Valuation Professional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        :root {
-            --primary: #1e88e5;
-            --primary-dark: #1976d2;
-            --secondary: #757575;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --light-bg: #f8f9fa;
-            --border-color: #dee2e6;
-            --dark-text: #343a40;
-            --light-text: #6c757d;
-            --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            --hover-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        
-        body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f7f9;
-            color: var(--dark-text);
-            padding-bottom: 2rem;
-        }
-        
-        .navbar {
-            box-shadow: var(--card-shadow);
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none;
-            margin-bottom: 0 !important;
-        }
-        
-        .navbar-brand {
-            font-weight: 600;
-            color: white !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .dashboard {
-            background: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
-        }
-
-        .dashboard-metric {
-            text-align: center;
-            padding: 1.5rem;
-            border-right: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .dashboard-metric:last-child {
-            border-right: none;
-        }
-
-        .dashboard-metric:hover {
-            background: var(--light-bg);
-        }
-
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin: 0.5rem 0;
-        }
-
-        .metric-label {
-            font-size: 0.875rem;
-            color: var(--light-text);
-            margin-bottom: 0;
-        }
-        
-        .card {
-            border-radius: 12px;
-            border: none;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .card:hover {
-            box-shadow: var(--hover-shadow);
-        }
-        
-        .card-header {
-            background: linear-gradient(to right, rgba(30,136,229,0.05), rgba(66,165,245,0.05));
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
-            border-radius: 12px 12px 0 0 !important;
-            display: flex;
-            align-items: center;
-        }
-        
-        .card-header i {
-            color: var(--primary);
-            margin-right: 12px;
-            font-size: 1.2rem;
-        }
-        
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .value-pair {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .value-pair:last-child {
-            border-bottom: none;
-        }
-
-        .value-pair-label {
-            color: var(--light-text);
-            font-size: 0.9rem;
-        }
-
-        .value-pair-value {
-            font-weight: 500;
-            color: var(--dark-text);
-        }
-        
-        .value-pairs-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .value-pair-group {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            background-color: var(--light-bg);
-        }
-
-        .value-pair-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--dark-text);
-            font-weight: 500;
-        }
-
-        .value-pair-group .form-control {
-            background-color: white;
-        }
-
-        .value-pair-group small {
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-        
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--dark-text);
-        }
-        
-        .form-control {
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(30,136,229,0.15);
-        }
-        
-        .input-group-text {
-            background-color: var(--light-bg);
-            border-color: var(--border-color);
-            color: var(--light-text);
-        }
-        
-        .form-group .help-text {
-            font-size: 80%;
-            color: var(--light-text);
-            margin-top: 4px;
-        }
-        
-        .btn {
-            padding: 0.5rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .form-group label {
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            color: var(--dark-text);
-        }
-
-        .calculated-value {
-            background-color: var(--light-bg);
-            font-weight: 500;
-            color: var(--primary-dark);
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
-        }
-        
-        .calculated-value {
-            background-color: #f1f5ff;
-            border-color: #d4e0f6;
-        }
-        
-        .positive {
-            color: var(--success) !important;
-            font-weight: 500;
-        }
-        
-        .negative {
-            color: var(--danger) !important;
-            font-weight: 500;
-        }
-        
-        .section-title {
-            color: var(--dark-text);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        /* Tooltip styling */
-        .tooltip-icon {
-            color: var(--secondary);
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        
-        /* Gauge styling */
-        .gauge-container {
-            position: relative;
-            height: 140px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-        
-        .gauge {
-            width: 100%;
-            height: 120px;
-            position: relative;
-            margin: 0 auto;
-            background: #f0f0f0;
-            border-radius: 120px 120px 0 0;
-            overflow: hidden;
-        }
-        
-        .gauge-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            background: linear-gradient(to top, #e74c3c, #f39c12, #2ecc71);
-            transform-origin: center bottom;
-            transition: all 1s ease-out;
-        }
-        
-        .gauge-cover {
-            width: 90%;
-            height: 90%;
-            background: white;
-            border-radius: 120px 120px 0 0;
-            position: absolute;
-            top: 10%;
-            left: 5%;
-            z-index: 1;
-            box-shadow: 0 -3px 6px rgba(0,0,0,0.1) inset;
-        }
-        
-        .gauge-pointer {
-            position: absolute;
-            width: 4px;
-            height: 60px;
-            background: #333;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%) rotate(0deg);
-            transform-origin: bottom center;
-            z-index: 2;
-            transition: all 1s ease-out;
-        }
-        
-        .gauge-value {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            z-index: 3;
-        }
-        
-        .traffic-lights {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        
-        .light {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin: 0 5px;
-            background-color: #555;
-        }
-        
-        .light.red.active { background-color: #e74c3c; }
-        .light.yellow.active { background-color: #f39c12; }
-        .light.green.active { background-color: #2ecc71; }
-        
-        .info-tooltip {
-            cursor: help;
-        }
-        
-        .tax-info {
-            font-size: 85%;
-            margin-top: 5px;
-        }
-        
-        .language-switcher .btn {
-            min-width: 45px;
-            padding: 0.25rem 0.5rem;
-            font-weight: 500;
-            border-width: 2px;
-            transition: all 0.2s ease;
-        }
-        
-        .language-switcher .btn:hover {
-            background-color: white;
-            color: var(--primary);
-            transform: translateY(-1px);
-        }
-    </style>
+    <link rel="stylesheet" href="css/calculator-styles.css">
+    <link rel="stylesheet" href="css/improved-costs-panel.css">
+    <link rel="stylesheet" href="css/layout-adjustments.css">
+    <link rel="stylesheet" href="css/formula-styles.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -429,254 +76,183 @@
             </div>
         </div>
 
-        <!-- Basic Data -->
+        <!-- Main container with two columns -->
         <div class="row">
+            <!-- Left Column - User Input Sections -->
             <div class="col-md-6">
-                <div class="card">
+                <!-- Basic Data -->
+                <div class="card mb-3">
                     <div class="card-header"><i class="fas fa-info-circle"></i> <span data-i18n="basicData">Basisdaten</span></div>
                     <div class="card-body">
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-12">
                                 <label for="address" data-i18n="address">Adresse</label>
                                 <input type="text" id="address" class="form-control">
                             </div>
-                            <div class="form-group col-md-6">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-12">
                                 <label for="city" data-i18n="city">Stadt</label>
                                 <input type="text" id="city" class="form-control">
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-6">
                                 <label for="livingArea" data-i18n="livingArea">Wohnfläche (m²)</label>
                                 <input type="number" id="livingArea" class="form-control" min="0" step="0.01">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-6">
                                 <label for="purchasePrice" data-i18n="purchasePrice">Kaufpreis (€)</label>
                                 <input type="number" id="purchasePrice" class="form-control" min="0" step="1000">
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-12">
                                 <label data-i18n="pricePerSqm">Preis pro m²</label>
                                 <input type="text" id="pricePerSqm" class="form-control calculated-value" readonly>
                             </div>
                         </div>
+                        
+                        <!-- Cost Settings Section (moved from detailed breakdown) -->
+                        <div class="cost-settings-section mt-4">
+                            <h5 class="settings-title mb-3" data-i18n="costSettings">Kosteneinstellungen</h5>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <label for="state" data-i18n="state">Bundesland</label>
+                                    <select id="state" class="form-control">
+                                        <option value="" data-i18n="pleaseSelect">Bitte wählen...</option>
+                                        <option value="baden-wuerttemberg">Baden-Württemberg</option>
+                                        <option value="bayern">Bayern</option>
+                                        <option value="berlin">Berlin</option>
+                                        <option value="brandenburg">Brandenburg</option>
+                                        <option value="bremen">Bremen</option>
+                                        <option value="hamburg">Hamburg</option>
+                                        <option value="hessen">Hessen</option>
+                                        <option value="mecklenburg-vorpommern">Mecklenburg-Vorpommern</option>
+                                        <option value="niedersachsen">Niedersachsen</option>
+                                        <option value="nordrhein-westfalen">Nordrhein-Westfalen</option>
+                                        <option value="rheinland-pfalz">Rheinland-Pfalz</option>
+                                        <option value="saarland">Saarland</option>
+                                        <option value="sachsen">Sachsen</option>
+                                        <option value="sachsen-anhalt">Sachsen-Anhalt</option>
+                                        <option value="schleswig-holstein">Schleswig-Holstein</option>
+                                        <option value="thueringen">Thüringen</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <label for="realEstateAgent">Immobilienmakler</label>
+                                    <select id="realEstateAgent" class="form-control">
+                                        <option value="no">Nein</option>
+                                        <option value="yes">Ja</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label>Grunderwerbsteuer</label>
+                                    <div class="input-group">
+                                        <input type="text" id="propertyTransferTaxPercent" class="form-control calculated-value" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label>Maklerprovision</label>
+                                    <div class="input-group">
+                                        <input type="text" id="realEstateAgentPercent" class="form-control" value="3.75">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden fields to maintain compatibility with existing JS -->
+                            <div class="d-none">
+                                <input type="text" id="notaryFeesPercent" value="1.50">
+                                <input type="text" id="landRegistryPercent" value="0.50">
+                            </div>
+                        </div>
+                        
+                        <!-- Furniture & Renovation (Combined) -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h5 class="mb-3"><i class="fas fa-tools mr-2"></i><i class="fas fa-couch mr-2"></i> <span data-i18n="renovationAndFurniture">Möbel & Zusätzliche Kosten (Renovierung)</span></h5>
+                            
+                            <!-- Furniture Section -->
+                            <div class="cost-settings-section mb-3">
+                                <h6 class="settings-title mb-3"><i class="fas fa-couch mr-2"></i> <span data-i18n="furniture">Möbel</span></h6>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="furniture" data-i18n="furniture">Möbel</label>
+                                        <input type="number" id="furniture" class="form-control" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Renovation Section -->
+                            <div class="cost-settings-section">
+                                <h6 class="settings-title mb-3"><i class="fas fa-tools mr-2"></i> <span data-i18n="renovation">Zusätzliche Kosten (Renovierung)</span></h6>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="renovationBathroom" data-i18n="bathroom">Badezimmer</label>
+                                        <input type="number" id="renovationBathroom" class="form-control" min="0">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="renovationKitchen" data-i18n="kitchen">Küche</label>
+                                        <input type="number" id="renovationKitchen" class="form-control" min="0">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="renovationLivingArea" data-i18n="livingRoom">Wohnbereich</label>
+                                        <input type="number" id="renovationLivingArea" class="form-control" min="0">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="renovationEntrance" data-i18n="entrance">Eingang</label>
+                                        <input type="number" id="renovationEntrance" class="form-control" min="0">
+                                    </div>
+                                </div>
+                            
+                                <!-- Summary Section -->
+                                <div class="form-row mt-4">
+                                    <div class="form-group col-12 col-sm-4">
+                                        <label data-i18n="total">Gesamt</label>
+                                        <input type="text" id="renovationTotal" class="form-control calculated-value" readonly>
+                                    </div>
+                                    <div class="form-group col-12 col-sm-4">
+                                        <label data-i18n="renovationCosts">Renovierungskosten (%)</label>
+                                        <div class="input-group">
+                                            <input type="text" id="renovationPercentage" class="form-control calculated-value" readonly>
+                                            <div class="input-group-append">
+                                                <span id="renovationStatus" class="input-group-text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 col-sm-4">
+                                        <label data-i18n="afaNext3Years">AfA nächste 3 Jahre</label>
+                                        <input type="text" id="afaNext3Years" class="form-control calculated-value" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Total Section with Divider -->
+                            <div class="form-row mt-3">
+                                <div class="form-group col-12">
+                                    <label data-i18n="furnitureRenovationTotal">= Summe Möbel & Renovierung</label>
+                                    <input type="text" id="furnitureRenovationTotal" class="form-control calculated-value font-weight-bold" readonly>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header"><i class="fas fa-percentage"></i> <span data-i18n="additionalCosts">Kaufnebenkosten</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="state" data-i18n="state">Bundesland</label>
-                                <select id="state" class="form-control">
-                                    <option value="" data-i18n="pleaseSelect">Bitte wählen...</option>
-                                    <option value="baden-wuerttemberg">Baden-Württemberg</option>
-                                    <option value="bayern">Bayern</option>
-                                    <option value="berlin">Berlin</option>
-                                    <option value="brandenburg">Brandenburg</option>
-                                    <option value="bremen">Bremen</option>
-                                    <option value="hamburg">Hamburg</option>
-                                    <option value="hessen">Hessen</option>
-                                    <option value="mecklenburg-vorpommern">Mecklenburg-Vorpommern</option>
-                                    <option value="niedersachsen">Niedersachsen</option>
-                                    <option value="nordrhein-westfalen">Nordrhein-Westfalen</option>
-                                    <option value="rheinland-pfalz">Rheinland-Pfalz</option>
-                                    <option value="saarland">Saarland</option>
-                                    <option value="sachsen">Sachsen</option>
-                                    <option value="sachsen-anhalt">Sachsen-Anhalt</option>
-                                    <option value="schleswig-holstein">Schleswig-Holstein</option>
-                                    <option value="thueringen">Thüringen</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Grunderwerbsteuer</label>
-                                <div class="input-group">
-                                    <input type="text" id="propertyTransferTaxPercent" class="form-control calculated-value" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="realEstateAgent">Immobilienmakler</label>
-                                <select id="realEstateAgent" class="form-control">
-                                    <option value="no">Nein</option>
-                                    <option value="yes">Ja</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Maklerprovision</label>
-                                <div class="input-group">
-                                    <input type="text" id="realEstateAgentPercent" class="form-control" value="3.75%">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label>Notargebühren</label>
-                                <div class="input-group">
-                                    <input type="text" id="notaryFeesPercent" class="form-control calculated-value" value="1.50" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Grundbucheintrag</label>
-                                <div class="input-group">
-                                    <input type="text" id="landRegistryPercent" class="form-control calculated-value" value="0.50" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Additional Costs & Total -->
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header"><i class="fas fa-euro-sign"></i> <span data-i18n="totalCosts">Gesamtkosten</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-3">
-                                <label data-i18n="propertyTransferTax">Grunderwerbsteuer</label>
-                                <input type="text" id="propertyTransferTaxValue" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label data-i18n="realEstateAgentCommission">Maklerprovision</label>
-                                <input type="text" id="realEstateAgentValue" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label data-i18n="notaryFees">Notargebühren</label>
-                                <input type="text" id="notaryFeesValue" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label data-i18n="landRegistry">Grundbucheintrag</label>
-                                <input type="text" id="landRegistryValue" class="form-control calculated-value" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label data-i18n="additionalCostsPercent">Kaufnebenkosten (%)</label>
-                                <input type="text" id="additionalCostsTotalPercent" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label data-i18n="additionalCostsValue">Kaufnebenkosten (€)</label>
-                                <input type="text" id="additionalCostsTotalValue" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label data-i18n="totalCostsWithAdditional">Gesamtkosten (Kaufpreis + Nebenkosten)</label>
-                                <input type="text" id="totalCosts" class="form-control calculated-value font-weight-bold" readonly>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Furniture & Renovation -->
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header"><i class="fas fa-couch"></i> <span data-i18n="furniture">Möbel</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="furniture" data-i18n="furniture">Möbel</label>
-                                <input type="number" id="furniture" class="form-control" min="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header"><i class="fas fa-tools"></i> <span data-i18n="renovation">Zusätzliche Kosten (Renovierung)</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="renovationBathroom" data-i18n="bathroom">Badezimmer</label>
-                                <input type="number" id="renovationBathroom" class="form-control" min="0">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="renovationKitchen" data-i18n="kitchen">Küche</label>
-                                <input type="number" id="renovationKitchen" class="form-control" min="0">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="renovationLivingArea" data-i18n="livingRoom">Wohnbereich</label>
-                                <input type="number" id="renovationLivingArea" class="form-control" min="0">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="renovationEntrance" data-i18n="entrance">Eingang</label>
-                                <input type="number" id="renovationEntrance" class="form-control" min="0">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label data-i18n="total">Gesamt</label>
-                                <input type="text" id="renovationTotal" class="form-control calculated-value" readonly>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label data-i18n="renovationCosts">Renovierungskosten (%)</label>
-                                <div class="input-group">
-                                    <input type="text" id="renovationPercentage" class="form-control calculated-value" readonly>
-                                    <div class="input-group-append">
-                                        <span id="renovationStatus" class="input-group-text"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label data-i18n="afaNext3Years">AfA nächste 3 Jahre</label>
-                                <input type="text" id="afaNext3Years" class="form-control calculated-value" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label data-i18n="furnitureRenovationTotal">= Summe Möbel & Renovierung</label>
-                                <input type="text" id="furnitureRenovationTotal" class="form-control calculated-value font-weight-bold" readonly>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-md-12">                    <div class="card">
-                    <div class="card-header"><i class="fas fa-money-bill-wave"></i> <span data-i18n="totalInvestment">Gesamtinvestition</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label data-i18n="totalInvestment">Gesamtinvestitionskosten</label>
-                                <input type="text" id="totalInvestmentCosts" class="form-control calculated-value font-weight-bold" readonly>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rental Income & Financing -->
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <div class="card">
+                <!-- Rental Income Card -->
+                <div class="card mb-3">
                     <div class="card-header"><i class="fas fa-hand-holding-usd"></i> <span data-i18n="rentalIncome">Mieteinnahmen</span></div>
                     <div class="card-body">
                         <div class="form-row mb-4">
@@ -718,27 +294,12 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="value-pair">
-                                <div class="value-pair-group">
-                                    <div class="d-flex justify-content-between">
-                                        <div class="pr-2 flex-grow-1">
-                                            <label class="value-pair-label" data-i18n="rentalYield">Mietrendite (%)</label>
-                                            <input type="text" id="netRentalYield" class="form-control calculated-value" readonly>
-                                        </div>
-                                        <div class="pl-2 flex-grow-1">
-                                            <label class="value-pair-label" data-i18n="priceToRentRatio">Kaufpreisfaktor</label>
-                                            <input type="text" id="priceToRentRatio" class="form-control calculated-value" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="col-md-6">                    <div class="card">
+                
+                <!-- Financing Card -->
+                <div class="card mb-3">
                     <div class="card-header"><i class="fas fa-money-bill-wave"></i> <span data-i18n="financing">Finanzierung</span></div>
                     <div class="card-body">
                         <div class="form-row">
@@ -778,11 +339,264 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Right Column - Output/Results Sections -->
+            <div class="col-md-6">
+                <!-- Gesamtkosten & Kaufnebenkosten -->
+                <div class="cost-overview-panel mb-3">
+                    <div class="cost-overview-card">
+                        <div class="cost-panel-header">
+                            <i class="fas fa-euro-sign"></i> <span data-i18n="totalCosts">Gesamtkosten & Kaufnebenkosten</span>
+                        </div>
+                        <div class="cost-panel-body">
+                            <!-- Visual breakdown of costs with tooltip info -->
+                            <div class="cost-breakdown-header mb-2" data-i18n="costOverview">Kostenübersicht</div>
+                            <div class="cost-visual-breakdown mb-3">
+                                <div id="purchasePriceSegment" class="cost-visual-segment purchase-price" style="width: 80%;" title="Kaufpreis"></div>
+                                <div id="propertyTaxSegment" class="cost-visual-segment property-tax" style="width: 5%;" title="Grunderwerbsteuer"></div>
+                                <div id="agentFeeSegment" class="cost-visual-segment agent-fee" style="width: 7%;" title="Maklerprovision"></div>
+                                <div id="notarySegment" class="cost-visual-segment notary" style="width: 5%;" title="Notargebühren"></div>
+                                <div id="registrySegment" class="cost-visual-segment registry" style="width: 3%;" title="Grundbucheintrag"></div>
+                            </div>
+                            
+                            <div class="cost-breakdown-compact mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-legend-color property-tax mr-2"></div>
+                                        <span data-i18n="propertyTransferTax">Grunderwerbsteuer</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span id="propertyTransferTaxValue" class="mr-2"></span>
+                                        <span id="propertyTransferTaxPercentDisplay"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-legend-color agent-fee mr-2"></div>
+                                        <span data-i18n="realEstateAgentCommission">Maklerprovision</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span id="realEstateAgentValue" class="mr-2"></span>
+                                        <span id="realEstateAgentPercentDisplay"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-legend-color notary mr-2"></div>
+                                        <span data-i18n="notaryFees">Notargebühren</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span id="notaryFeesValue" class="mr-2"></span>
+                                        <span id="notaryFeesPercentDisplay"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-legend-color registry mr-2"></div>
+                                        <span data-i18n="landRegistry">Grundbucheintrag</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span id="landRegistryValue" class="mr-2"></span>
+                                        <span id="landRegistryPercentDisplay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Summary of total costs -->
+                            <div class="cost-total mb-3">
+                                <div class="cost-total-label" data-i18n="totalCostsWithAdditional">Gesamtkosten (Kaufpreis + Nebenkosten)</div>
+                                <div>
+                                    <span class="cost-total-value" id="totalCosts"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Additional costs summary -->
+                            <div class="cost-panel-section">
+                                <div class="cost-item">
+                                    <div class="cost-item-label" data-i18n="purchasePrice">Kaufpreis</div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-item-value" id="purchasePriceSummary"></div>
+                                    </div>
+                                </div>
+                                <div class="cost-item">
+                                    <div class="cost-item-label" data-i18n="additionalCostsValue">Kaufnebenkosten</div>
+                                     <div class="cost-item-percent" id="additionalCostsTotalPercent"></div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-item-value" id="additionalCostsTotalValue"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Total Investment Section -->
+                            <div class="cost-panel-section mt-4 pt-3 border-top">
+                                <h6 class="settings-title mb-3"><i class="fas fa-money-bill-wave mr-2"></i> <span data-i18n="totalInvestment">Gesamtinvestition</span></h6>
+                                
+                                <!-- Furniture and Renovation Summary -->
+                                <div class="compact-summary mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="cost-legend-color furniture-color mr-2"></div>
+                                            <span data-i18n="furniture">Möbel</span>
+                                        </div>
+                                        <div class="cost-item-value" id="furnitureSummary"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="cost-legend-color renovation-color mr-2"></div>
+                                            <span data-i18n="renovation">Renovierung</span>
+                                        </div>
+                                        <div class="cost-item-value" id="renovationSummary"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <small class="text-muted" data-i18n="furnitureRenovationTotal">Summe (Möbel + Renovierung)</small>
+                                        </div>
+                                        <div class="cost-item-value font-weight-bold" id="furnitureRenovationSummary"></div>
+                                    </div>
+                                </div>
+
+                                <div class="cost-item investment-row">
+                                    <div class="cost-item-label" data-i18n="totalInvestment">Gesamtinvestitionskosten</div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="cost-item-value font-weight-bold investment-highlight" id="totalInvestmentCosts"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Added reference to website -->
+                            <div class="mt-2 text-right">
+                                <small class="text-muted">
+                                    <a href="https://www.gutachterausschuesse-bw.de/borisbw/?lang=en" target="_blank" class="text-muted">
+                                        <i class="fas fa-external-link-alt"></i> Bodenwert: gutachterausschuesse-bw.de
+                                    </a>
+                                </small>
+                            </div>
+                             <div class="mt-2 text-right">
+                                <small class="text-muted">
+                                    <a href="https://www.homeday.de/de " target="_blank" class="text-muted">
+                                        <i class="fas fa-external-link-alt"></i> Wohnfleich Wert: homeday.de/de 
+                                    </a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rendite-Kennzahlen Card -->
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-chart-bar"></i> <span>Rendite-Kennzahlen</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="investment-metric highlight-box p-3 text-center mb-3 mb-md-0">
+                                    <h5 data-i18n="rentalYield">Mietrendite (%)</h5>
+                                    <input type="text" id="netRentalYield" class="form-control calculated-value text-center font-weight-bold" style="font-size: 1.5rem; border: none; background: transparent;" readonly>
+                                    <small class="text-muted">Jährliche Brutomietrendite</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="investment-metric highlight-box p-3 text-center mb-3 mb-md-0">
+                                    <h5>Netto Mietrendite (%)</h5>
+                                    <input type="text" id="nettoMietrendite" class="form-control calculated-value text-center font-weight-bold" style="font-size: 1.5rem; border: none; background: transparent;" readonly>
+                                    <small class="text-muted">Jährliche Nettomietrendite</small>
+                                    <div class="mt-2">
+                                        <small class="formula-detail">
+                                            <span id="coldRentYearlyValue">0</span> € (Kaltmiete/Jahr) −<br>
+                                            <span id="expensesReservesTotalYearlyValue">0</span> € (Ausgaben/Jahr) ÷<br>
+                                            <span id="totalInvestmentCostsValue">0</span> € (Gesamtinvestition) × 100
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="investment-metric highlight-box p-3 text-center">
+                                    <h5 data-i18n="priceToRentRatio">Kaufpreisfaktor</h5>
+                                    <input type="text" id="priceToRentRatio" class="form-control calculated-value text-center font-weight-bold" style="font-size: 1.5rem; border: none; background: transparent;" readonly>
+                                    <small class="text-muted">Verhältnis Kaufpreis zu Jahreskaltmiete</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cashflow Card -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <i class="fas fa-chart-line"></i> <span>Cashflow</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="value-pairs-container">
+                            <div class="value-pair">
+                                <div class="value-pair-group">
+                                    <label class="value-pair-label" data-i18n="operatingCashflow">Operativer Cashflow</label>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="pr-2 flex-grow-1">
+                                            <small class="text-muted" data-i18n="monthly">Monatlich</small>
+                                            <input type="text" id="operativeCashflowMonthly" class="form-control calculated-value font-weight-bold" readonly>
+                                        </div>
+                                        <div class="pl-2 flex-grow-1">
+                                            <small class="text-muted" data-i18n="yearly">Jährlich</small>
+                                            <input type="text" id="operativeCashflowYearly" class="form-control calculated-value" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="value-pair">
+                                <div class="value-pair-group">
+                                    <label class="value-pair-label" data-i18n="taxCashflow">Cashflow nach Steuern</label>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="pr-2 flex-grow-1">
+                                            <small class="text-muted" data-i18n="monthly">Monatlich</small>
+                                            <input type="text" id="cashflowAfterTaxMonthly" class="form-control calculated-value font-weight-bold" readonly>
+                                        </div>
+                                        <div class="pl-2 flex-grow-1">
+                                            <small class="text-muted" data-i18n="yearly">Jährlich</small>
+                                            <input type="text" id="cashflowAfterTaxYearly" class="form-control calculated-value" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Eigenkapitalrendite Card -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fas fa-piggy-bank"></i> <span data-i18n="equityReturn">Eigenkapitalrendite</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 text-center">
+                                <div class="gauge-container">
+                                    <div class="gauge">
+                                        <div id="equityReturnGaugeFill" class="gauge-fill"></div>
+                                        <div class="gauge-cover"></div>
+                                        <div id="equityReturnGaugePointer" class="gauge-pointer"></div>
+                                    </div>
+                                    <div class="gauge-value">
+                                        <input type="text" id="equityReturn" class="form-control calculated-value text-center font-weight-bold" readonly style="background: transparent; border: none; font-size: 1.5rem;">
+                                    </div>
+                                </div>
+                                <div class="traffic-lights">
+                                    <div id="equityReturnLightRed" class="light red"></div>
+                                    <div id="equityReturnLightYellow" class="light yellow"></div>
+                                    <div id="equityReturnLightGreen" class="light green"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <!-- Ausgaben und Rücklagen -->
-        <div class="row mt-3">
-            <div class="col-md-12">                    <div class="card">
+        <!-- Expenses and Reserves Card in its own row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-3">
                     <div class="card-header"><i class="fas fa-file-invoice-dollar"></i> <span data-i18n="expensesAndReserves">Ausgaben und Rücklagen</span></div>
                     <div class="card-body">
                         <div class="form-row">
@@ -810,11 +624,11 @@
                                 <input type="text" id="vacancyReserveMonthly" class="form-control calculated-value" readonly>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="maintenanceReservePerSqm" data-i18n="maintenanceReserve">Instandhaltungsrücklage (€/m²/Jahr)</label>
+                                <label for="maintenanceReservePerSqm" data-i18n="maintenanceReserve">Instandhaltungsrücklagen pro qm (Annual reserve / pro qm)</label>
                                 <input type="number" id="maintenanceReservePerSqm" class="form-control" min="0" step="0.1" value="10">
                             </div>
                             <div class="form-group col-md-4">
-                                <label data-i18n="maintenanceReserve">Monatliche Instandhaltungsrücklage (€)</label>
+                                <label data-i18n="maintenanceReserve_calculated">Monatliche Instandhaltungsrücklage (€)</label>
                                 <input type="text" id="maintenanceReserveMonthly" class="form-control calculated-value" readonly>
                             </div>
                         </div>
@@ -824,7 +638,7 @@
                                 <input type="text" id="expensesReservesTotalMonthly" class="form-control calculated-value font-weight-bold" readonly>
                             </div>
                             <div class="form-group col-md-6">
-                                <label data-i18n="totalExpenses">Gesamtausgaben jährlich (€)</label>
+                                <label data-i18n="totalExpenses_jahr">Gesamtausgaben jährlich (€)</label>
                                 <input type="text" id="expensesReservesTotalYearly" class="form-control calculated-value" readonly>
                             </div>
                         </div>
@@ -833,9 +647,10 @@
             </div>
         </div>
         
-        <!-- Steuerliche Betrachtung -->
-        <div class="row mt-3">
-            <div class="col-md-12">                    <div class="card">
+        <!-- Tax Consideration Card in its own row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-3">
                     <div class="card-header"><i class="fas fa-balance-scale"></i> <span data-i18n="taxConsideration">Steuerliche Betrachtung</span></div>
                     <div class="card-body">
                         <div class="form-row">
@@ -948,77 +763,9 @@
                 </div>
             </div>
         </div>
+        
 
-        <!-- Cashflow & Return on Investment -->
-        <div class="row mt-3">
-            <div class="col-md-6">                    <div class="card">
-                    <div class="card-header"><i class="fas fa-chart-line"></i> <span>Cashflow</span></div>
-                    <div class="card-body">
-                        <div class="value-pairs-container">
-                            <div class="value-pair">
-                                <div class="value-pair-group">
-                                    <label class="value-pair-label" data-i18n="operatingCashflow">Operativer Cashflow</label>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="pr-2 flex-grow-1">
-                                            <small class="text-muted" data-i18n="monthly">Monatlich</small>
-                                            <input type="text" id="operativeCashflowMonthly" class="form-control calculated-value font-weight-bold" readonly>
-                                        </div>
-                                        <div class="pl-2 flex-grow-1">
-                                            <small class="text-muted" data-i18n="yearly">Jährlich</small>
-                                            <input type="text" id="operativeCashflowYearly" class="form-control calculated-value" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="value-pair">
-                                <div class="value-pair-group">
-                                    <label class="value-pair-label" data-i18n="taxCashflow">Cashflow nach Steuern</label>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="pr-2 flex-grow-1">
-                                            <small class="text-muted" data-i18n="monthly">Monatlich</small>
-                                            <input type="text" id="cashflowAfterTaxMonthly" class="form-control calculated-value font-weight-bold" readonly>
-                                        </div>
-                                        <div class="pl-2 flex-grow-1">
-                                            <small class="text-muted" data-i18n="yearly">Jährlich</small>
-                                            <input type="text" id="cashflowAfterTaxYearly" class="form-control calculated-value" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header"><i class="fas fa-piggy-bank"></i> <span data-i18n="equityReturn">Eigenkapitalrendite</span></div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-12 text-center">
-                                <div class="gauge-container">
-                                    <div class="gauge">
-                                        <div id="equityReturnGaugeFill" class="gauge-fill"></div>
-                                        <div class="gauge-cover"></div>
-                                        <div id="equityReturnGaugePointer" class="gauge-pointer"></div>
-                                    </div>
-                                    <div class="gauge-value">
-                                        <input type="text" id="equityReturn" class="form-control calculated-value text-center font-weight-bold" readonly style="background: transparent; border: none; font-size: 1.5rem;">
-                                    </div>
-                                </div>
-                                <div class="traffic-lights">
-                                    <div id="equityReturnLightRed" class="light red"></div>
-                                    <div id="equityReturnLightYellow" class="light yellow"></div>
-                                    <div id="equityReturnLightGreen" class="light green"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        
         <div class="row mt-4">
             <div class="col-12 text-center">
                 <p class="text-muted">
@@ -1032,57 +779,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
     <script src="js/translations.js"></script>
+    <script src="js/language-handler.js"></script>
+    <script src="js/cost-panel.js"></script>
     <script src="js/pro_script.js"></script>
-    
-    <script>
-        // Language handling utilities
-        let currentLanguage = localStorage.getItem('language') || 'de';
-        
-        function switchLanguage(lang) {
-            currentLanguage = lang;
-            localStorage.setItem('language', lang);
-            updatePageText();
-        }
-        
-        function updatePageText() {
-            // Update all elements with data-i18n attribute
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[currentLanguage][key]) {
-                    element.textContent = translations[currentLanguage][key];
-                }
-            });
-            
-            // Update select options for states
-            const stateSelect = document.getElementById('state');
-            if (stateSelect) {
-                const currentValue = stateSelect.value;
-                stateSelect.innerHTML = `<option value="">${currentLanguage === 'de' ? 'Bitte wählen...' : 'Please select...'}</option>`;
-                Object.entries(translations[currentLanguage].states).forEach(([value, text]) => {
-                    const option = document.createElement('option');
-                    option.value = value;
-                    option.textContent = text;
-                    stateSelect.appendChild(option);
-                });
-                stateSelect.value = currentValue;
-            }
-            
-            // Update yes/no options
-            const realEstateAgentSelect = document.getElementById('realEstateAgent');
-            if (realEstateAgentSelect) {
-                const currentValue = realEstateAgentSelect.value;
-                realEstateAgentSelect.innerHTML = `
-                    <option value="no">${translations[currentLanguage].no}</option>
-                    <option value="yes">${translations[currentLanguage].yes}</option>
-                `;
-                realEstateAgentSelect.value = currentValue;
-            }
-        }
-        
-        // Initial translation
-        document.addEventListener('DOMContentLoaded', () => {
-            updatePageText();
-        });
-    </script>
 </body>
 </html>

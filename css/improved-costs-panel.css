@@ -1,0 +1,334 @@
+/* Improved Cost Panel Styles */
+.cost-overview-panel {
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+}
+
+.cost-overview-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cost-panel-header {
+    background: linear-gradient(to right, rgba(30,136,229,0.05), rgba(66,165,245,0.05));
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.cost-panel-header i {
+    color: var(--primary);
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+.cost-panel-body {
+    padding: 1.25rem;
+}
+
+.cost-panel-section {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.cost-panel-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.cost-panel-section-title {
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.cost-breakdown-header {
+    font-weight: 600;
+    color: var(--dark-text);
+    font-size: 1rem;
+    text-align: center;
+}
+
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.cost-item:hover {
+    background-color: var(--light-bg);
+}
+
+.cost-item:last-child {
+    margin-bottom: 0;
+}
+
+.cost-item-label {
+    color: var(--dark-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.cost-item-value {
+    font-weight: 500;
+    min-width: 120px;
+    text-align: right;
+}
+
+.cost-item-percent {
+    color: var(--light-text);
+    margin-left: 0.5rem;
+    min-width: 60px;
+    text-align: right;
+}
+
+.cost-divider {
+    border-top: 1px dashed var(--border-color);
+    margin: 1rem 0;
+}
+
+.cost-total {
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cost-total-label {
+    font-weight: 600;
+    color: var(--dark-text);
+    font-size: 1rem;
+}
+
+.cost-total-value {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+}
+
+.cost-total-percent {
+    color: var(--primary-dark);
+    margin-left: 0.5rem;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: right;
+}
+
+.cost-inputs-section {
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.cost-visual-breakdown {
+    height: 8px;
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    display: flex;
+}
+
+.cost-visual-segment {
+    height: 100%;
+    transition: width 0.5s ease, transform 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.cost-visual-segment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.cost-visual-segment.purchase-price {
+    background-color: var(--primary);
+}
+
+.cost-visual-segment.property-tax {
+    background-color: #5e35b1;
+}
+
+.cost-visual-segment.agent-fee {
+    background-color: #43a047;
+}
+
+.cost-visual-segment.notary {
+    background-color: #fb8c00;
+}
+
+.cost-visual-segment.registry {
+    background-color: #e53935;
+}
+
+.cost-visual-segment.furniture-color {
+    background-color: #009688;
+}
+
+.cost-visual-segment.renovation-color {
+    background-color: #ff9800;
+}
+
+.cost-visual-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.cost-legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.cost-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 6px;
+}
+
+.cost-legend-color.property-tax {
+    background-color: #5e35b1;
+}
+
+.cost-legend-color.agent-fee {
+    background-color: #43a047;
+}
+
+.cost-legend-color.notary {
+    background-color: #fb8c00;
+}
+
+.cost-legend-color.registry {
+    background-color: #e53935;
+}
+
+.cost-legend-color.furniture-color {
+    background-color: #009688;
+}
+
+.cost-legend-color.renovation-color {
+    background-color: #ff9800;
+}
+
+.breakdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.breakdown-toggle:hover {
+    background-color: rgba(30,136,229,0.08);
+}
+
+.breakdown-toggle i {
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.breakdown-toggle.expanded i {
+    transform: rotate(180deg);
+}
+
+/* Removed collapsed and expanded section styles since we now show the cost breakdown always */
+.collapsed-section, .expanded-section {
+    /* Maintaining these classes for backward compatibility but removing effects */
+    overflow: visible;
+    max-height: none;
+}
+
+/* New compact cost breakdown styles */
+.cost-breakdown-compact {
+    background-color: rgba(248, 249, 250, 0.6);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cost-breakdown-compact .cost-panel-section-title {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.cost-breakdown-compact .cost-item {
+    padding: 0.4rem 0;
+}
+
+.cost-breakdown-compact .cost-item-label {
+    font-size: 0.85rem;
+    color: var(--secondary);
+}
+
+.cost-breakdown-compact .cost-item-value,
+.cost-breakdown-compact .cost-item-percent {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.cost-breakdown-compact .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+@media (max-width: 767.98px) {
+    .cost-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cost-item-value, .cost-item-percent {
+        margin-top: 0.5rem;
+    }
+    
+    .cost-total {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cost-total-value, .cost-total-percent {
+        margin-top: 0.5rem;
+    }
+}
+
+/* Highlight class for total investment costs */
+.investment-highlight {
+    color: #1e88e5 !important; /* Blue color */
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+}
+
+/* Highlight the entire total investment row */
+.investment-row {
+    background-color: rgba(30, 136, 229, 0.08);
+    border-left: 3px solid #1e88e5;
+    padding-left: 12px;
+    margin-left: -10px;
+    border-radius: 4px;
+}

@@ -1,0 +1,55 @@
+/* Additional layout adjustments */
+@media (min-width: 768px) {
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* Improve cost panel styling */
+.cost-overview-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cost-panel-body {
+  flex: 1;
+  padding-bottom: 1.5rem;
+}
+
+/* Better spacing in smaller cards */
+.cost-settings-section {
+  margin-bottom: 1rem;
+}
+
+.cost-settings-section .form-group {
+  margin-bottom: 0.75rem;
+}
+
+/* More visible investment section */
+.cost-panel-section.mt-4.pt-3.border-top {
+  background-color: rgba(30, 136, 229, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem !important;
+}
+
+/* Responsive input fields */
+@media (max-width: 575.98px) {
+  .form-row .form-group {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* Smaller fonts for narrow columns */
+@media (max-width: 991.98px) {
+  label {
+    font-size: 0.9rem;
+  }
+  
+  .settings-title {
+    font-size: 1rem;
+  }
+}

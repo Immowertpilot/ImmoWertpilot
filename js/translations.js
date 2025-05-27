@@ -6,7 +6,7 @@ const translations = {
         reset: "Zurücksetzen",
         
         // Dashboard
-        totalInvestment: "Gesamtinvestition",
+        totalInvestment: "Gesamtinvestition  (Kaufpreis + Nebenkosten +  Renovierung)",
         operatingCashflow: "Operativer Cashflow mtl.",
         taxCashflow: "Cashflow n. Steuern mtl.",
         equityReturn: "Eigenkapitalrendite",
@@ -35,6 +35,10 @@ const translations = {
         additionalCostsPercent: "Kaufnebenkosten (%)",
         additionalCostsValue: "Kaufnebenkosten (€)",
         totalCostsWithAdditional: "Gesamtkosten (Kaufpreis + Nebenkosten)",
+        detailedBreakdown: "Detaillierte Aufschlüsselung",
+        costBreakdown: "Kostenaufschlüsselung",
+        costSettings: "Kosteneinstellungen",
+        costOverview: "Kostenübersicht",
         
         // Furniture & Renovation
         furniture: "Möbel",
@@ -73,9 +77,10 @@ const translations = {
         // Expenses & Reserves
         expensesAndReserves: "Ausgaben und Rücklagen",
         nonCoverableExpenses: "Nicht umlagefähige Nebenkosten (€/Monat)",
-        utilityPrepayments: "Nebenkostenvorauszahlung (€/Monat)",
+        utilityPrepayments: "Nebenkostenvorauszahlung / Hausgeld (€/Monat)",
         vacancyReserve: "Mietausfall-Rücklage (%)",
-        maintenanceReserve: "Instandhaltungsrücklage (€/m²/Jahr)",
+        maintenanceReserve: "Instandhaltungsrücklagen pro qm (Annual reserve / pro qm)",
+        maintenanceReserve_calculated: "Instandhaltungsrücklagen (€/Monat)",
         totalExpenses: "Gesamtausgaben",
         
         // Tax Consideration
@@ -112,7 +117,7 @@ const translations = {
         reset: "Reset",
         
         // Dashboard
-        totalInvestment: "Total Investment",
+        totalInvestment: "Total Investment (Purchase Price + Additional Costs + Renovation)",
         operatingCashflow: "Operating Cashflow mo.",
         taxCashflow: "After Tax Cashflow mo.",
         equityReturn: "Return on Equity",
@@ -141,6 +146,10 @@ const translations = {
         additionalCostsPercent: "Additional Costs (%)",
         additionalCostsValue: "Additional Costs (€)",
         totalCostsWithAdditional: "Total Costs (Purchase + Additional)",
+        detailedBreakdown: "Detailed Breakdown",
+        costBreakdown: "Cost Breakdown",
+        costSettings: "Cost Settings",
+        costOverview: "Cost Overview",
         
         // Furniture & Renovation
         furniture: "Furniture",

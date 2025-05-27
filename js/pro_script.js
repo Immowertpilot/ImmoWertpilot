@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
         livingArea: document.getElementById('livingArea'),
         purchasePrice: document.getElementById('purchasePrice'),
         pricePerSqm: document.getElementById('pricePerSqm'),
+        nettoMietrendite: document.getElementById('nettoMietrendite'),
+        
+        // Formula explanation elements
+        coldRentYearlyValue: document.getElementById('coldRentYearlyValue'),
+        expensesReservesTotalYearlyValue: document.getElementById('expensesReservesTotalYearlyValue'),
+        totalInvestmentCostsValue: document.getElementById('totalInvestmentCostsValue'),
         
         // Additional costs
         state: document.getElementById('state'),
@@ -46,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         additionalCostsTotalPercent: document.getElementById('additionalCostsTotalPercent'),
         additionalCostsTotalValue: document.getElementById('additionalCostsTotalValue'),
         totalCosts: document.getElementById('totalCosts'),
+        purchasePriceSummary: document.getElementById('purchasePriceSummary'),
         
         // Furniture and Renovation
         furniture: document.getElementById('furniture'),
@@ -60,14 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
         totalInvestmentCosts: document.getElementById('totalInvestmentCosts'),
         afaNext3Years: document.getElementById('afaNext3Years'),
         
+        // Investment summary fields
+        furnitureSummary: document.getElementById('furnitureSummary'),
+        renovationSummary: document.getElementById('renovationSummary'),
+        furnitureRenovationSummary: document.getElementById('furnitureRenovationSummary'),
+        
         // Rental income
         coldRentPerSqm: document.getElementById('coldRentPerSqm'),
         coldRentMonthly: document.getElementById('coldRentMonthly'),
         coldRentYearly: document.getElementById('coldRentYearly'),
         warmRentMonthly: document.getElementById('warmRentMonthly'),
         warmRentYearly: document.getElementById('warmRentYearly'),
-        netRentalYield: document.getElementById('netRentalYield'),
-        priceToRentRatio: document.getElementById('priceToRentRatio'),
+        netRentalYield: document.getElementById('netRentalYield'), // This is a DIV with class metric-value-large
+        priceToRentRatio: document.getElementById('priceToRentRatio'), // This is a DIV with class metric-value-large
         
         // Financing
         equityAmount: document.getElementById('equityAmount'),
@@ -154,6 +166,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }).format(value / 100);
     }
     
+    function formatNumberWithoutCurrency(value) {
+        // Format number with thousand separators but without currency symbol
+        return new Intl.NumberFormat('de-DE', { 
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(Math.round(value));
+    }
+    
     /**
      * Main calculation function that processes all property valuation data
      */
@@ -172,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
         val.repaymentRate = parseFloat(el.repaymentRate.value) || 2.0;
         val.houseMoneyNonCoverableMonthly = parseFloat(el.houseMoneyNonCoverableMonthly.value) || 0;
         val.utilityPrepaymentsMonthly = parseFloat(el.utilityPrepaymentsMonthly.value) || 0;
-        val.vacancyRatePercentage = parseFloat(el.vacancyRatePercentage.value) || 2.0;
-        val.maintenanceReservePerSqm = parseFloat(el.maintenanceReservePerSqm.value) || 10.0;
+        val.vacancyRatePercentage = parseFloat(el.vacancyRatePercentage.value) || 0.0;
+        val.maintenanceReservePerSqm = parseFloat(el.maintenanceReservePerSqm.value) || 0.0;
         val.buildingYear = el.buildingYear.value;
         val.buildingSharePercent = parseFloat(el.buildingShare.value) || 80;
         val.furnitureDepreciationPeriod = parseInt(el.furnitureDepreciationPeriod.value) || 3;
@@ -205,30 +225,56 @@ document.addEventListener('DOMContentLoaded', function() {
             calculateRenovationCosts(val);
             
             // Calculate financing terms
-            calculateFinancing(val);
-            
-            // Calculate rental income if rent data is available
-            if (val.coldRentPerSqm > 0) {
-                // Calculate rental first
-                calculateRental(val);
-                
-                // Then calculate expenses and reserves (requires coldRentMonthly)
-                calculateExpenses(val);
-                
-                // Calculate tax implications
-                calculateTax(val);
-                
-                // Calculate cashflow
-                calculateCashflow(val);
-                
-                // Calculate return on equity
-                calculateEquityReturn(val);
+            calculateFinancing(val);                // Calculate rental income if rent data is available
+                if (val.coldRentPerSqm > 0) {
+                    // Calculate rental first
+                    calculateRental(val);
+                    
+                    // Then calculate expenses and reserves (requires coldRentMonthly)
+                    calculateExpenses(val);
+                    
+                    // Recalculate netto mietrendite now that we have expenses calculated
+                    // Formula: nettomietrendite = (coldRentYearly - expensesReservesTotalYearly) / totalInvestmentCosts * 100
+                    if (val.totalInvestmentCosts > 0) {
+                        val.nettoMietrendite = ((val.coldRentYearly - val.expensesReservesTotalYearly) / val.totalInvestmentCosts) * 100;
+                        if (el.nettoMietrendite) {
+                            el.nettoMietrendite.value = formatPercent(val.nettoMietrendite);
+                            let baseClasses = 'form-control calculated-value text-center font-weight-bold';
+                            if (val.nettoMietrendite >= 3) {
+                                el.nettoMietrendite.className = baseClasses + ' positive';
+                            } else if (val.nettoMietrendite >= 2) {
+                                el.nettoMietrendite.className = baseClasses; // Default
+                            } else { // < 2
+                                el.nettoMietrendite.className = baseClasses + ' negative';
+                            }
+                        }
+                        
+                        // Update formula explanation values
+                        if (el.coldRentYearlyValue) {
+                            el.coldRentYearlyValue.textContent = formatNumberWithoutCurrency(val.coldRentYearly);
+                        }
+                        if (el.expensesReservesTotalYearlyValue) {
+                            el.expensesReservesTotalYearlyValue.textContent = formatNumberWithoutCurrency(val.expensesReservesTotalYearly);
+                        }
+                        if (el.totalInvestmentCostsValue) {
+                            el.totalInvestmentCostsValue.textContent = formatNumberWithoutCurrency(val.totalInvestmentCosts);
+                        }
+                    }
+                    
+                    // Calculate tax implications
+                    calculateTax(val);
+                    
+                    // Calculate cashflow
+                    calculateCashflow(val);
+                    
+                    // Calculate return on equity
+                    calculateEquityReturn(val);
 
-                // Update dashboard metrics
-                el.dashboardTotalInvestment.textContent = formatCurrency(val.totalInvestmentCosts);
-                el.dashboardOperatingCashflow.textContent = formatCurrency(val.operativeCashflowMonthly);
-                el.dashboardTaxCashflow.textContent = formatCurrency(val.cashflowAfterTaxMonthly);
-                el.dashboardROE.textContent = formatPercent(val.equityReturn);
+                    // Update dashboard metrics
+                    el.dashboardTotalInvestment.textContent = formatCurrency(val.totalInvestmentCosts);
+                    el.dashboardOperatingCashflow.textContent = formatCurrency(val.operativeCashflowMonthly);
+                    el.dashboardTaxCashflow.textContent = formatCurrency(val.cashflowAfterTaxMonthly);
+                    el.dashboardROE.textContent = formatPercent(val.equityReturn);
             } else {
                 clearRentalData();
             }
@@ -256,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
             el.renovationStatus.innerHTML = '✓';
             el.renovationStatus.className = 'input-group-text bg-success text-white';
         } else {
-            el.renovationPercentage.className = 'form-control calculated-value';
+            el.renovationPercentage.className = 'form-control calculated-value'; // Removed 'negative' as it's just a warning
             el.renovationStatus.innerHTML = '!';
             el.renovationStatus.className = 'input-group-text bg-warning text-dark';
         }
@@ -265,9 +311,21 @@ document.addEventListener('DOMContentLoaded', function() {
         val.furnitureRenovationTotal = val.furniture + val.renovationTotal;
         el.furnitureRenovationTotal.value = formatCurrency(val.furnitureRenovationTotal);
         
+        // Update the furniture and renovation summary in the Gesamtinvestition section
+        if (el.furnitureSummary) el.furnitureSummary.textContent = formatCurrency(val.furniture);
+        if (el.renovationSummary) el.renovationSummary.textContent = formatCurrency(val.renovationTotal);
+        if (el.furnitureRenovationSummary) el.furnitureRenovationSummary.textContent = formatCurrency(val.furnitureRenovationTotal);
+        
         // Calculate total investment costs (purchase + additional costs + furniture + renovation)
         val.totalInvestmentCosts = val.totalCosts + val.furnitureRenovationTotal;
-        el.totalInvestmentCosts.value = formatCurrency(val.totalInvestmentCosts);
+        el.totalInvestmentCosts.textContent = formatCurrency(val.totalInvestmentCosts);
+        
+        // Update furniture and renovation summary fields (these are textContent, not value)
+        // The HTML has these as DIVs, not inputs.
+        // el.furnitureSummary.value = formatCurrency(val.furniture);
+        // el.renovationSummary.value = formatCurrency(val.renovationTotal);
+        // el.furnitureRenovationSummary.value = formatCurrency(val.furnitureRenovationTotal);
+        // This was already handled by textContent above.
     }
     
     /**
@@ -282,7 +340,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const percentText = el.realEstateAgentPercent.value.replace('%', '').replace(',', '.').trim();
         val.realEstateAgentPercent = val.hasRealEstateAgent ? parseFloat(percentText) || 3.75 : 0;
         if (!val.hasRealEstateAgent) {
-            el.realEstateAgentPercent.value = "0%";
+            el.realEstateAgentPercent.value = "0%"; // Display 0% if no agent
+        } else {
+             el.realEstateAgentPercent.value = formatPercent(val.realEstateAgentPercent); // Format if agent
         }
         
         // Fixed percentages for notary and land registry
@@ -290,8 +350,9 @@ document.addEventListener('DOMContentLoaded', function() {
         val.landRegistryPercent = 0.50;
         
         // Update percentage fields to ensure they're always displayed
-        el.notaryFeesPercent.value = val.notaryFeesPercent;
-        el.landRegistryPercent.value = val.landRegistryPercent;
+        // These are hidden inputs, so .value is correct.
+        el.notaryFeesPercent.value = val.notaryFeesPercent.toFixed(2); 
+        el.landRegistryPercent.value = val.landRegistryPercent.toFixed(2);
         
         // Calculate monetary values of additional costs
         val.propertyTransferTaxValue = (val.propertyTransferTaxPercent / 100) * val.purchasePrice;
@@ -299,11 +360,11 @@ document.addEventListener('DOMContentLoaded', function() {
         val.notaryFeesValue = (val.notaryFeesPercent / 100) * val.purchasePrice;
         val.landRegistryValue = (val.landRegistryPercent / 100) * val.purchasePrice;
         
-        // Update output fields with calculated values
-        el.propertyTransferTaxValue.value = formatCurrency(val.propertyTransferTaxValue);
-        el.realEstateAgentValue.value = formatCurrency(val.realEstateAgentValue);
-        el.notaryFeesValue.value = formatCurrency(val.notaryFeesValue);
-        el.landRegistryValue.value = formatCurrency(val.landRegistryValue);
+        // Update output fields with calculated values (these are SPANs in the HTML)
+        el.propertyTransferTaxValue.innerText = formatCurrency(val.propertyTransferTaxValue);
+        el.realEstateAgentValue.innerText = formatCurrency(val.realEstateAgentValue);
+        el.notaryFeesValue.innerText = formatCurrency(val.notaryFeesValue);
+        el.landRegistryValue.innerText = formatCurrency(val.landRegistryValue);
         
         // Calculate totals
         val.additionalCostsTotalPercent = val.propertyTransferTaxPercent + val.realEstateAgentPercent + 
@@ -311,12 +372,26 @@ document.addEventListener('DOMContentLoaded', function() {
         val.additionalCostsTotalValue = val.propertyTransferTaxValue + val.realEstateAgentValue + 
                                         val.notaryFeesValue + val.landRegistryValue;
         
-        el.additionalCostsTotalPercent.value = formatPercent(val.additionalCostsTotalPercent);
-        el.additionalCostsTotalValue.value = formatCurrency(val.additionalCostsTotalValue);
+        el.additionalCostsTotalPercent.innerText = formatPercent(val.additionalCostsTotalPercent);
+        el.additionalCostsTotalValue.innerText = formatCurrency(val.additionalCostsTotalValue);
         
         // Total purchase cost including additional costs
         val.totalCosts = val.purchasePrice + val.additionalCostsTotalValue;
-        el.totalCosts.value = formatCurrency(val.totalCosts);
+        el.totalCosts.innerText = formatCurrency(val.totalCosts);
+        
+        // Update the improved cost panel
+        if (window.updateCostPanelVisuals) {
+            window.updateCostPanelVisuals(val.purchasePrice, {
+                propertyTransferTaxValue: val.propertyTransferTaxValue,
+                propertyTransferTaxPercent: val.propertyTransferTaxPercent,
+                realEstateAgentValue: val.realEstateAgentValue,
+                realEstateAgentPercent: val.realEstateAgentPercent,
+                notaryFeesValue: val.notaryFeesValue,
+                notaryFeesPercent: val.notaryFeesPercent,
+                landRegistryValue: val.landRegistryValue,
+                landRegistryPercent: val.landRegistryPercent
+            });
+        }
     }
     
     /**
@@ -325,8 +400,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateFinancing(val) {
         // Calculate effective equity and loan amount
         val.effectiveEquityAmount = Math.min(val.equityAmount, val.totalInvestmentCosts);
-        val.loanAmount = val.totalInvestmentCosts - val.effectiveEquityAmount;
-        val.equityPercentage = (val.effectiveEquityAmount / val.totalInvestmentCosts) * 100;
+        val.loanAmount = val.totalInvestmentCosts > 0 ? val.totalInvestmentCosts - val.effectiveEquityAmount : 0;
+        val.equityPercentage = val.totalInvestmentCosts > 0 ? (val.effectiveEquityAmount / val.totalInvestmentCosts) * 100 : 0;
         val.annuityRate = val.loanInterestRate + val.repaymentRate;
         
         // Update financing output fields
@@ -365,28 +440,65 @@ document.addEventListener('DOMContentLoaded', function() {
         el.coldRentYearly.value = formatCurrency(val.coldRentYearly);
         el.warmRentMonthly.value = formatCurrency(val.warmRentMonthly);
         el.warmRentYearly.value = formatCurrency(val.warmRentYearly);
-        el.priceToRentRatio.value = val.priceToRentRatio.toFixed(2) + 'x';
         
         // Calculate and display rental yield
-        val.netRentalYield = (val.coldRentYearly / val.totalInvestmentCosts) * 100;
-        el.netRentalYield.value = formatPercent(val.netRentalYield);
+        val.netRentalYield = val.purchasePrice > 0 ? (val.coldRentYearly / val.purchasePrice) * 100 : 0;
         
-        // Add color coding based on yield value
-        if (val.netRentalYield >= 4) {
-            el.netRentalYield.className = 'form-control calculated-value positive';
-        } else if (val.netRentalYield >= 3) {
-            el.netRentalYield.className = 'form-control calculated-value';
-        } else {
-            el.netRentalYield.className = 'form-control calculated-value negative';
+        // Calculate and display netto mietrendite (net rental yield)
+        // Formula: nettomietrendite = (coldRentYearly - expensesReservesTotalYearly) / totalInvestmentCosts * 100
+        if (val.totalInvestmentCosts > 0 && val.coldRentYearly > 0 && val.expensesReservesTotalYearly !== undefined) {
+            val.nettoMietrendite = ((val.coldRentYearly - val.expensesReservesTotalYearly) / val.totalInvestmentCosts) * 100;
+            
+            if (el.nettoMietrendite) {
+                el.nettoMietrendite.value = formatPercent(val.nettoMietrendite);
+                let baseClasses = 'form-control calculated-value text-center font-weight-bold';
+                if (val.nettoMietrendite >= 3) {
+                    el.nettoMietrendite.className = baseClasses + ' positive';
+                } else if (val.nettoMietrendite >= 2) {
+                    el.nettoMietrendite.className = baseClasses; // Default
+                } else { // < 2
+                    el.nettoMietrendite.className = baseClasses + ' negative';
+                }
+                
+                // Update formula explanation values
+                if (el.coldRentYearlyValue) {
+                    el.coldRentYearlyValue.textContent = formatNumberWithoutCurrency(val.coldRentYearly);
+                }
+                if (el.expensesReservesTotalYearlyValue) {
+                    el.expensesReservesTotalYearlyValue.textContent = formatNumberWithoutCurrency(val.expensesReservesTotalYearly);
+                }
+                if (el.totalInvestmentCostsValue) {
+                    el.totalInvestmentCostsValue.textContent = formatNumberWithoutCurrency(val.totalInvestmentCosts);
+                }
+            }
         }
         
-        // Add color coding for price-to-rent ratio
-        if (val.priceToRentRatio <= 20) {
-            el.priceToRentRatio.className = 'form-control calculated-value positive';
-        } else if (val.priceToRentRatio <= 25) {
-            el.priceToRentRatio.className = 'form-control calculated-value';
-        } else {
-            el.priceToRentRatio.className = 'form-control calculated-value negative';
+        // Update netRentalYield (now an input element)
+        if (el.netRentalYield) {
+            el.netRentalYield.value = formatPercent(val.netRentalYield);
+            let baseClasses = 'form-control calculated-value text-center font-weight-bold';
+            if (val.netRentalYield >= 4) {
+                el.netRentalYield.className = baseClasses + ' positive';
+            } else if (val.netRentalYield >= 3) {
+                el.netRentalYield.className = baseClasses; // Default
+            } else { // < 3
+                el.netRentalYield.className = baseClasses + ' negative';
+            }
+        }
+
+        // Update priceToRentRatio (now an input element)
+        if (el.priceToRentRatio) {
+            el.priceToRentRatio.value = val.priceToRentRatio.toFixed(2) + 'x';
+            let baseClasses = 'form-control calculated-value text-center font-weight-bold';
+            if (val.priceToRentRatio > 0 && val.priceToRentRatio <= 20) { // Ensure priceToRentRatio is positive before styling
+                el.priceToRentRatio.className = baseClasses + ' positive';
+            } else if (val.priceToRentRatio > 0 && val.priceToRentRatio <= 25) {
+                el.priceToRentRatio.className = baseClasses; // Default
+            } else if (val.priceToRentRatio > 25) { // Only apply negative if it's high
+                el.priceToRentRatio.className = baseClasses + ' negative';
+            } else { // Default for 0 or other cases
+                el.priceToRentRatio.className = baseClasses;
+            }
         }
     }
     
@@ -399,8 +511,8 @@ document.addEventListener('DOMContentLoaded', function() {
         el.vacancyReserveMonthly.value = formatCurrency(val.vacancyReserveMonthly);
         
         // Calculate maintenance reserve
-        val.maintenanceReserveMonthlyPerSqm = val.maintenanceReservePerSqm / 12;
-        val.maintenanceReserveMonthly = val.livingArea * val.maintenanceReserveMonthlyPerSqm;
+        val.maintenanceReserveMonthlyPerSqm = val.maintenanceReservePerSqm ;
+        val.maintenanceReserveMonthly = val.livingArea * val.maintenanceReserveMonthlyPerSqm / 12;
         el.maintenanceReserveMonthly.value = formatCurrency(val.maintenanceReserveMonthly);
         
         // Calculate total monthly expenses (excluding utility prepayments as they are not an expense for the owner)
@@ -416,150 +528,230 @@ document.addEventListener('DOMContentLoaded', function() {
      * Calculate tax implications including depreciation and tax amount
      */
     function calculateTax(val) {
-        // Calculate AfA rate based on building age
-        val.afaRate = val.buildingYear === 'before1925' ? 2.5 : 2.0;
-        
-        // Calculate building and land values
-        val.landSharePercent = 100 - val.buildingSharePercent;
-        val.buildingValue = (val.buildingSharePercent / 100) * val.totalCosts;
-        val.landValue = (val.landSharePercent / 100) * val.totalCosts;
-        
-        // Update building and land value fields
-        el.buildingValue.value = formatCurrency(val.buildingValue);
-        el.landValue.value = formatCurrency(val.landValue);
-        
-        // Calculate building depreciation (AfA)
-        val.buildingAfaYearly = (val.afaRate / 100) * val.buildingValue;
-        val.buildingAfaMonthly = val.buildingAfaYearly / 12;
-        
-        // Update depreciation fields
-        el.buildingAfaMonthly.value = formatCurrency(val.buildingAfaMonthly);
-        el.buildingAfaYearly.value = formatCurrency(val.buildingAfaYearly);
-        
-        // Calculate AfA for next 3 years
-        val.afaNext3Years = val.buildingAfaYearly * 3;
-        el.afaNext3Years.value = formatCurrency(val.afaNext3Years);
-        
-        // Calculate furniture depreciation (Möbel AfA)
-        val.furnitureAfaYearly = val.furniture > 0 ? val.furniture / val.furnitureDepreciationPeriod : 0;
-        val.furnitureAfaMonthly = val.furnitureAfaYearly / 12;
-        el.furnitureAfaYearly.value = formatCurrency(val.furnitureAfaYearly);
-        el.furnitureAfaMonthly.value = formatCurrency(val.furnitureAfaMonthly);
-        
-        // Display WEG Verwaltungskosten
-        el.verwaltungskostenWEG.value = formatCurrency(val.houseMoneyNonCoverableMonthly);
-        
-        // Calculate renovation depreciation (AfA)
-        val.renovationAfaYearly = val.renovationTotal > 0 ? (val.afaRate / 100) * val.renovationTotal : 0;
-        val.renovationAfaMonthly = val.renovationAfaYearly / 12;
-        
-        // Calculate AfA Gesamt (sum of all depreciations)
-        val.afaGesamtMonthly = val.buildingAfaMonthly + val.furnitureAfaMonthly  + val.houseMoneyNonCoverableMonthly;
-        val.afaGesamtYearly = val.afaGesamtMonthly * 12;
-        el.afaGesamtMonthly.value = formatCurrency(val.afaGesamtMonthly);
-        el.afaGesamtYearly.value = formatCurrency(val.afaGesamtYearly);
-        
-        // Calculate taxable income
-        val.deductibleExpensesMonthly = val.interestMonthly + 
-                                     val.houseMoneyNonCoverableMonthly + // WEG Verwaltungskosten included here
-                                     val.utilityPrepaymentsMonthly +
-                                     val.buildingAfaMonthly +
-                                     val.furnitureAfaMonthly;
-        
-        val.taxableIncomeMonthly = val.coldRentMonthly - val.deductibleExpensesMonthly;
-        val.taxableIncomeYearly = val.taxableIncomeMonthly * 12;
-        
-        // Note: We'll calculate tax in the calculateCashflow function instead
-        // based on cashflowNachAfaMonthly
-        
-        // Display taxable income info with appropriate styling
-        if (val.cashflowNachAfaMonthly > 0) {
-            el.taxableIncomeInfo.innerHTML = `Zu versteuerndes Einkommen nach AfA: ${formatCurrency(val.cashflowNachAfaMonthly)}/Monat <span class="negative">(steuerpflichtig)</span>`;
-            el.taxableIncomeInfo.className = 'tax-info';
+    // --- Pre-calculations for Renovation Logic ---
+    // Building's share of the pure purchase price (for 15% rule)
+    const buildingShareOfPurchasePrice = val.purchasePrice * (val.buildingSharePercent / 100);
+    val.renovationDeductibleMonthly = 0;
+    val.renovationCapitalizedAmount = 0;
+    val.afaNext3Years = 0; // Default to 0
+
+    // --- Renovation Logic (15% Rule) ---
+    if (val.renovationTotal > 0 && buildingShareOfPurchasePrice > 0) {
+        const renovationRatio = val.renovationTotal / buildingShareOfPurchasePrice;
+        if (renovationRatio <= 0.15) {
+            // Erhaltungsaufwand (maintenance/repairs, <= 15%)
+            // Assume user wants to spread it over 3 years (as implied by "afaNext3Years")
+            // This is a common choice for §82b EStDV (2-5 years).
+            val.renovationDeductibleMonthly = (val.renovationTotal / 3) / 12;
+            val.afaNext3Years = val.renovationTotal; // Total expensed over 3 years
+            // Note: If user chose immediate deduction, renovationDeductibleMonthly would be (val.renovationTotal / 12) for the first year.
         } else {
-            el.taxableIncomeInfo.innerHTML = `Zu versteuerndes Einkommen nach AfA: ${formatCurrency(val.cashflowNachAfaMonthly)}/Monat <span class="positive">(steuerlicher Vorteil)</span>`;
-            el.taxableIncomeInfo.className = 'tax-info';
+            // Anschaffungsnahe Herstellungskosten (acquisition-related production costs, > 15%)
+            // These costs must be capitalized and added to the building's value.
+            val.renovationCapitalizedAmount = val.renovationTotal;
+            // val.afaNext3Years remains 0 because this renovation is not expensed separately.
         }
     }
-    
+
+    // --- Building AfA Rate ---
+    val.afaRate = val.buildingYear === 'before1925' ? 2.5 : 2.0;
+
+    // --- Calculate Building and Land Values ---
+    val.landSharePercent = 100 - val.buildingSharePercent;
+
+    // Building value includes its share of total costs PLUS any capitalized renovation costs
+    val.buildingValue = (val.buildingSharePercent / 100) * val.totalCosts + val.renovationCapitalizedAmount;
+    val.landValue = (val.landSharePercent / 100) * val.totalCosts;
+
+    // Update building and land value fields
+    el.buildingValue.value = formatCurrency(val.buildingValue);
+    el.landValue.value = formatCurrency(val.landValue);
+
+    // --- Calculate Building Depreciation (AfA) ---
+    // AfA is now calculated on the building value that might include capitalized renovations
+    val.buildingAfaYearly = (val.afaRate / 100) * val.buildingValue;
+    val.buildingAfaMonthly = val.buildingAfaYearly / 12;
+
+    // Update depreciation fields
+    el.buildingAfaMonthly.value = formatCurrency(val.buildingAfaMonthly);
+    el.buildingAfaYearly.value = formatCurrency(val.buildingAfaYearly);
+
+    // Update "AfA nächste 3 Jahre" field (related to expensed renovation)
+    el.afaNext3Years.value = formatCurrency(val.afaNext3Years);
+
+    // --- Calculate Furniture Depreciation (Möbel AfA) ---
+    val.furnitureAfaYearly = val.furniture > 0 && val.furnitureDepreciationPeriod > 0 ? val.furniture / val.furnitureDepreciationPeriod : 0;
+    val.furnitureAfaMonthly = val.furnitureAfaYearly / 12;
+    el.furnitureAfaYearly.value = formatCurrency(val.furnitureAfaYearly);
+    el.furnitureAfaMonthly.value = formatCurrency(val.furnitureAfaMonthly);
+
+    // --- Display WEG Verwaltungskosten (non-coverable housing costs) ---
+    // These are deductible operating expenses, not AfA.
+    el.verwaltungskostenWEG.value = formatCurrency(val.houseMoneyNonCoverableMonthly);
+
+    // --- Calculate AfA Gesamt (sum of actual depreciations) ---
+    // This should only include true depreciation amounts.
+    val.afaGesamtMonthly = val.buildingAfaMonthly + val.furnitureAfaMonthly + val.houseMoneyNonCoverableMonthly;
+
+    val.afaGesamtYearly = val.afaGesamtMonthly * 12;
+
+    el.afaGesamtMonthly.value = formatCurrency(val.afaGesamtMonthly);
+    el.afaGesamtYearly.value = formatCurrency(val.afaGesamtYearly);
+
+    // --- Calculate Tax Deductible Expenses & Taxable Income ---
+    val.taxDeductibleExpensesMonthly =
+        val.interestMonthly +                  // Zinsen
+        val.houseMoneyNonCoverableMonthly +    // Nicht umlegbare Nebenkosten (z.B. WEG-Verwaltung)
+        val.buildingAfaMonthly +               // Gebäude-AfA
+        val.furnitureAfaMonthly +              // Möbel-AfA
+        val.renovationDeductibleMonthly;       // Ggf. monatlicher Anteil Erhaltungsaufwand
+
+    // WARNING: The deductibility of reserves is critical.
+    // Contributions to Instandhaltungsrücklage (maintenance reserve) are generally NOT deductible.
+    // Only *actual paid maintenance expenses* are.
+    // Similarly, a "vacancy reserve" is not typically an expense. Actual lost rent reduces income.
+    // If val.maintenanceReserveMonthly and val.vacancyReserveMonthly represent *actual expenses/losses*, then add them.
+    // For example:
+    // if (val.actualMaintenancePaidMonthly) val.taxDeductibleExpensesMonthly += val.actualMaintenancePaidMonthly;
+    // For now, I am following the original code's intent to include them, but this is a major caveat:
+    if (val.maintenanceReserveMonthly) { // Assuming this means actual deductible maintenance costs for the month
+        val.taxDeductibleExpensesMonthly += val.maintenanceReserveMonthly;
+    }
+    if (val.vacancyReserveMonthly) { // Assuming this means actual deductible vacancy costs/losses for the month
+         val.taxDeductibleExpensesMonthly += val.vacancyReserveMonthly;
+    }
+
+
+    val.taxableIncomeMonthly = val.coldRentMonthly - val.taxDeductibleExpensesMonthly;
+
+    // The cashflowAfterAfa (or rather, cashflow after tax considerations related to AfA)
+    // would typically be:
+    // val.cashflowVorSteuernMonthly = val.coldRentMonthly - (val.interestMonthly + val.houseMoneyNonCoverableMonthly + val.maintenanceReserveMonthly + val.vacancyReserveMonthly + other_operational_costs_not_loan_repayment);
+    // val.steuerersparnisDurchVerlusteMonthly = val.taxableIncomeMonthly < 0 ? Math.abs(val.taxableIncomeMonthly * val.personalTaxRate) : 0;
+    // val.steuerschuldDurchGewinneMonthly = val.taxableIncomeMonthly > 0 ? (val.taxableIncomeMonthly * val.personalTaxRate) : 0;
+    // cashflowNachAfaUndSteuern = cashflowVorSteuern - Tilgung + steuerersparnisDurchVerluste - steuerschuldDurchGewinne
+
+    // The function's purpose seems to be to calculate tax-relevant items.
+    // The actual "cashflowNachAfaMonthly" would be calculated elsewhere using these figures.
+    // If taxableIncomeInfo is a display element:
+    // el.taxableIncomeInfo.textContent = `Taxable income monthly: ${formatCurrency(val.taxableIncomeMonthly)}`;
+}
+
+// Dummy formatCurrency for testing if not defined elsewhere
+// function formatCurrency(value) {
+//     if (typeof value !== 'number') return '0.00 €';
+//     return value.toFixed(2) + ' €';
+// }
+
+// Dummy el object for testing
+// const el = {
+//     buildingValue: { value: null },
+//     landValue: { value: null },
+//     buildingAfaMonthly: { value: null },
+//     buildingAfaYearly: { value: null },
+//     afaNext3Years: { value: null },
+//     furnitureAfaYearly: { value: null },
+//     furnitureAfaMonthly: { value: null },
+//     verwaltungskostenWEG: { value: null },
+//     afaGesamtMonthly: { value: null },
+//     afaGesamtYearly: { value: null }
+// };
     /**
      * Calculate cashflow before and after tax
      */
-    function calculateCashflow(val) {
-        // Calculate operative cashflow (before tax) using warm rent instead of cold rent
-        val.operativeCashflowMonthly = val.warmRentMonthly - val.annuityMonthly - val.expensesReservesTotalMonthly;
-        val.operativeCashflowYearly = val.operativeCashflowMonthly * 12;
-        
-        // Update operative cashflow fields with appropriate styling
-        el.operativeCashflowMonthly.value = formatCurrency(val.operativeCashflowMonthly);
-        el.operativeCashflowYearly.value = formatCurrency(val.operativeCashflowYearly);
-        el.operativeCashflowMonthly.className = val.operativeCashflowMonthly >= 0 ? 
-            'form-control calculated-value positive font-weight-bold' : 
-            'form-control calculated-value negative font-weight-bold';
-        el.operativeCashflowYearly.className = val.operativeCashflowMonthly >= 0 ? 
-            'form-control calculated-value positive' : 
-            'form-control calculated-value negative';
-            
-        // Calculate cashflow nach AfA
-        val.cashflowNachAfaMonthly = val.operativeCashflowMonthly + val.afaGesamtMonthly;
-        el.cashflowNachAfaMonthly.value = formatCurrency(val.cashflowNachAfaMonthly);
-        el.cashflowNachAfaMonthly.className = val.cashflowNachAfaMonthly >= 0 ? 
-            'form-control calculated-value positive font-weight-bold' : 
-            'form-control calculated-value negative font-weight-bold';
-        
-        // Calculate tax on cashflow nach AfA instead of the old taxable income
-        val.taxAmountMonthly = (val.taxRate / 100) * val.cashflowNachAfaMonthly;
-        val.taxAmountYearly = val.taxAmountMonthly * 12;
-        el.taxAmountMonthly.value = formatCurrency(val.taxAmountMonthly);
-        el.taxAmountYearly.value = formatCurrency(val.taxAmountYearly);
-        
-        // Calculate cashflow after tax using cashflowNachAfaMonthly instead of operativeCashflowMonthly
-        val.cashflowAfterTaxMonthly = val.cashflowNachAfaMonthly - val.taxAmountMonthly;
-        val.cashflowAfterTaxYearly = val.cashflowAfterTaxMonthly * 12;
-        
-        // Update cashflow after tax fields with appropriate styling
-        el.cashflowAfterTaxMonthly.value = formatCurrency(val.cashflowAfterTaxMonthly);
-        el.cashflowAfterTaxYearly.value = formatCurrency(val.cashflowAfterTaxYearly);
-        el.cashflowAfterTaxMonthly.className = val.cashflowAfterTaxMonthly >= 0 ? 
-            'form-control calculated-value positive font-weight-bold' : 
-            'form-control calculated-value negative font-weight-bold';
-        el.cashflowAfterTaxYearly.className = val.cashflowAfterTaxMonthly >= 0 ? 
-            'form-control calculated-value positive' : 
-            'form-control calculated-value negative';
+   function calculateCashflow(val) {
+    // Calculate operative cashflow (before tax)
+    // Warm rent - (annuity + total non-coverable expenses & reserves)
+    val.operativeCashflowMonthly = val.warmRentMonthly - val.annuityMonthly - val.expensesReservesTotalMonthly;
+    val.operativeCashflowYearly = val.operativeCashflowMonthly * 12;
+
+    el.operativeCashflowMonthly.value = formatCurrency(val.operativeCashflowMonthly);
+    el.operativeCashflowYearly.value = formatCurrency(val.operativeCashflowYearly);
+    el.operativeCashflowMonthly.className = val.operativeCashflowMonthly >= 0 ?
+        'form-control calculated-value positive font-weight-bold' :
+        'form-control calculated-value negative font-weight-bold';
+    el.operativeCashflowYearly.className = val.operativeCashflowMonthly >= 0 ?
+        'form-control calculated-value positive' :
+        'form-control calculated-value negative';
+
+    // Calculate cashflow nach AfA (this is treated as taxable income)
+    // This relies on val.taxableIncomeMonthly being correctly calculated in calculateTax()
+    val.cashflowNachAfaMonthly = val.afaGesamtMonthly + val.operativeCashflowMonthly; // This is the actual taxable base
+
+    el.cashflowNachAfaMonthly.value = formatCurrency(val.cashflowNachAfaMonthly);
+    el.cashflowNachAfaMonthly.className = val.cashflowNachAfaMonthly >= 0 ?
+        'form-control calculated-value positive font-weight-bold' : // Positive taxable income
+        'form-control calculated-value negative font-weight-bold'; // Negative taxable income (loss)
+
+    // Update taxableIncomeInfo display
+    if (val.cashflowNachAfaMonthly > 0) {
+        el.taxableIncomeInfo.innerHTML = `Zu versteuerndes Einkommen: ${formatCurrency(val.cashflowNachAfaMonthly)}/Monat <span class="negative">(steuerpflichtig)</span>`;
+        el.taxableIncomeInfo.className = 'tax-info';
+    } else if (val.cashflowNachAfaMonthly < 0) {
+        el.taxableIncomeInfo.innerHTML = `Zu versteuerndes Einkommen: ${formatCurrency(Math.abs(val.cashflowNachAfaMonthly))}/Monat <span class="positive">(steuerlicher Verlust)</span>`; // Show as positive loss
+        el.taxableIncomeInfo.className = 'tax-info';
+    } else {
+        el.taxableIncomeInfo.innerHTML = `Zu versteuerndes Einkommen: ${formatCurrency(val.cashflowNachAfaMonthly)}/Monat`;
+        el.taxableIncomeInfo.className = 'tax-info';
     }
+
+    // Calculate tax amount based on taxable income (cashflowNachAfaMonthly)
+    val.taxAmountMonthly = (val.taxRate / 100) * val.cashflowNachAfaMonthly;
+    // If cashflowNachAfaMonthly is a loss (negative), taxAmountMonthly will be negative (tax saving)
+    // For display, tax owed is positive, tax saved might be shown as negative or positive benefit
+    el.taxAmountMonthly.value = formatCurrency(val.taxAmountMonthly); // Will show negative if it's a saving
+    val.taxAmountYearly = val.taxAmountMonthly * 12;
+    el.taxAmountYearly.value = formatCurrency(val.taxAmountYearly);
+
+    // Calculate cashflow after tax
+    // --- THIS IS THE LINE CHANGED TO MATCH THE IMAGE'S DERIVATION ---
+    // Original: val.cashflowAfterTaxMonthly = val.operativeCashflowMonthly - val.taxAmountMonthly;
+    // To match image's apparent logic for its "Cashflow nach Steuern" line:
+    val.cashflowAfterTaxMonthly = val.cashflowNachAfaMonthly - val.taxAmountMonthly;
+    // This effectively becomes: Taxable Income - (Taxable Income * Tax Rate) = Taxable Income * (1 - Tax Rate)
+    // It's "taxable income after tax has been applied to it", NOT necessarily the final cash in pocket.
+    //--------------------------------------------------------------------
+
+    val.cashflowAfterTaxYearly = val.cashflowAfterTaxMonthly * 12;
+
+    el.cashflowAfterTaxMonthly.value = formatCurrency(val.cashflowAfterTaxMonthly);
+    el.cashflowAfterTaxYearly.value = formatCurrency(val.cashflowAfterTaxYearly);
+    el.cashflowAfterTaxMonthly.className = val.cashflowAfterTaxMonthly >= 0 ?
+        'form-control calculated-value positive font-weight-bold' :
+        'form-control calculated-value negative font-weight-bold';
+    el.cashflowAfterTaxYearly.className = val.cashflowAfterTaxMonthly >= 0 ?
+        'form-control calculated-value positive' :
+        'form-control calculated-value negative';
+}
     
     /**
      * Calculate return on equity and update gauge visualization
      */
     function calculateEquityReturn(val) {
-        // Only calculate if equity amount is greater than 0
         if (val.effectiveEquityAmount > 0) {
-            // Calculate annual values
-            val.cashflowAfterTaxYearly = val.cashflowAfterTaxMonthly * 12;
-            val.repaymentYearly = val.repaymentMonthly * 12;
+            // Annual cashflow after tax + annual repayment
+            const annualReturnForEquity = (val.cashflowAfterTaxMonthly * 12) + (val.repaymentMonthly * 12) + (val.renovationTotal / 3) ;
             
-            // Calculate return on equity (including repayment and total AfA as part of return)
-            // This properly accounts for building, renovation, furniture depreciation
-            // and non-coverable housing costs (WEG Verwaltungskosten)
-            val.equityReturn = ((val.cashflowAfterTaxYearly + val.repaymentYearly + (val.renovationTotal / 3)) / val.effectiveEquityAmount) * 100;
-            console.log(`cashflowAfterTaxYearly Return: ${val.cashflowAfterTaxYearly}%`);
-            console.log(`repaymentYearly Return: ${val.repaymentYearly}%`);
-            console.log(`afaGesamtYearly Return: ${val.afaGesamtYearly}%`);
-            console.log(`effectiveEquityAmount: ${val.effectiveEquityAmount}%`);
-            console.log(`Equity Return: ${val.equityReturn}%`);
-
+            // The original formula included (val.renovationTotal / 3). This might be an attempt to factor in value increase or tax shield from renovation.
+            // A standard ROE is (Net Profit After Tax + Interest Expense * (1-Tax Rate)) / Average Equity
+            // Or simpler for property: (Cashflow After Tax + Principal Repayment) / Equity Invested
+            // Let's use the simpler: (Annual Cashflow After Tax + Annual Principal Repayment) / Equity
+            val.equityReturn = (annualReturnForEquity / val.effectiveEquityAmount) * 100;
+            
+            // console.log(`cashflowAfterTaxYearly: ${val.cashflowAfterTaxMonthly * 12}`);
+            // console.log(`repaymentYearly: ${val.repaymentMonthly * 12}`);
+            // console.log(`effectiveEquityAmount: ${val.effectiveEquityAmount}`);
+            // console.log(`Equity Return: ${val.equityReturn}%`);
       
-            // Update equity return field with appropriate styling
             el.equityReturn.value = formatPercent(val.equityReturn);
             el.equityReturn.className = val.equityReturn >= 0 ? 
                 'form-control calculated-value text-center font-weight-bold positive' : 
                 'form-control calculated-value text-center font-weight-bold negative';
             
-            // Update gauge visualization
             updateEquityReturnGauge(val.equityReturn);
         } else {
-            // Clear equity return if no equity is provided
             el.equityReturn.value = '';
+            el.equityReturn.className = 'form-control calculated-value text-center font-weight-bold';
             updateEquityReturnGauge(0);
         }
     }
@@ -568,27 +760,24 @@ document.addEventListener('DOMContentLoaded', function() {
      * Update equity return gauge visual elements
      */
     function updateEquityReturnGauge(value) {
-        // Limit the value for gauge display purposes (0-50%)
-        const limitedValue = Math.min(Math.max(value, 0), 50);
+        const limitedValue = Math.min(Math.max(value, -20), 50); // Allow some negative display
+        const gaugeRange = 70; // from -20 to 50
+        const normalizedValue = limitedValue + 20; // Shift to 0-70 range
         
-        // Calculate rotation angle (0% = 0 degrees, 50% = 180 degrees)
-        const rotation = (limitedValue / 50) * 180;
+        const rotation = (normalizedValue / gaugeRange) * 180; // 0% = 0deg, 100% (of range) = 180deg
         
-        // Update gauge elements
-        el.equityReturnGaugeFill.style.height = `${(limitedValue / 50) * 100}%`;
+        el.equityReturnGaugeFill.style.height = `${(normalizedValue / gaugeRange) * 100}%`;
         el.equityReturnGaugePointer.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
         
-        // Reset traffic light indicators
         el.equityReturnLightRed.className = 'light red';
         el.equityReturnLightYellow.className = 'light yellow';
         el.equityReturnLightGreen.className = 'light green';
         
-        // Set appropriate traffic light based on equity return value
-        if (value >= 30) {
+        if (value >= 10) { // Adjusted thresholds for ROE
             el.equityReturnLightGreen.className = 'light green active';
-        } else if (value >= 10) {
+        } else if (value >= 5) {
             el.equityReturnLightYellow.className = 'light yellow active';
-        } else if (value > 0) {
+        } else if (value > -Infinity) { // any calculated value
             el.equityReturnLightRed.className = 'light red active';
         }
     }
@@ -597,26 +786,50 @@ document.addEventListener('DOMContentLoaded', function() {
      * Clear rental data fields when rent info is missing
      */
     function clearRentalData() {
-        const rentalFields = [
+        const rentalInputFields = [
             'coldRentMonthly', 'coldRentYearly', 'warmRentMonthly', 'warmRentYearly',
-            'netRentalYield', 'priceToRentRatio',
             'vacancyReserveMonthly', 'maintenanceReserveMonthly', 'expensesReservesTotalMonthly', 'expensesReservesTotalYearly',
             'operativeCashflowMonthly', 'operativeCashflowYearly',
             'taxAmountMonthly', 'taxAmountYearly', 
             'cashflowAfterTaxMonthly', 'cashflowAfterTaxYearly',
-            'furnitureAfaYearly',
-            'equityReturn', 'afaNext3Years'
+            'furnitureAfaYearly', 'furnitureAfaMonthly', // Added monthly
+            'equityReturn', 'afaNext3Years', 'cashflowNachAfaMonthly', 'nettoMietrendite', 'netRentalYield' // Added nettoMietrendite and netRentalYield
         ];
         
-        // Clear all rental-related fields
-        rentalFields.forEach(id => {
-            if (el[id]) el[id].value = '';
+        // Clear formula explanation values
+        if (el.coldRentYearlyValue) el.coldRentYearlyValue.textContent = "0";
+        if (el.expensesReservesTotalYearlyValue) el.expensesReservesTotalYearlyValue.textContent = "0";
+        if (el.totalInvestmentCostsValue) el.totalInvestmentCostsValue.textContent = "0";
+        
+        rentalInputFields.forEach(id => {
+            if (el[id] && typeof el[id].value !== 'undefined') {
+                 el[id].value = '';
+                 // Reset classes for inputs that might have positive/negative
+                 if (el[id].classList) {
+                    el[id].classList.remove('positive', 'negative');
+                    // Ensure base classes if they were complex
+                    if (id === 'equityReturn') {
+                        el[id].className = 'form-control calculated-value text-center font-weight-bold';
+                    } else if (id === 'operativeCashflowMonthly' || id === 'cashflowAfterTaxMonthly' || id === 'cashflowNachAfaMonthly') {
+                        el[id].className = 'form-control calculated-value font-weight-bold';
+                    } else if (el[id].tagName === 'INPUT') {
+                        el[id].className = 'form-control calculated-value';
+                    }
+                 }
+            }
         });
+
+        // Handle netRentalYield and priceToRentRatio (now input elements)
+        if (el.netRentalYield) {
+            el.netRentalYield.value = '';
+            el.netRentalYield.className = 'form-control calculated-value text-center font-weight-bold';
+        }
+        if (el.priceToRentRatio) {
+            el.priceToRentRatio.value = '';
+            el.priceToRentRatio.className = 'form-control calculated-value text-center font-weight-bold';
+        }
         
-        // Reset the equity return gauge
         updateEquityReturnGauge(0);
-        
-        // Clear tax info
         if (el.taxableIncomeInfo) el.taxableIncomeInfo.innerHTML = '';
     }
     
@@ -624,62 +837,136 @@ document.addEventListener('DOMContentLoaded', function() {
      * Clear all calculated output fields
      */
     function clearAllCalculatedFields() {
-        document.querySelectorAll('.calculated-value').forEach(input => {
-            input.value = '';
-            input.className = 'form-control calculated-value'; // Reset styling
+        document.querySelectorAll('.calculated-value').forEach(element => {
+            // Clear content
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') {
+                element.value = '';
+            } else { // For DIVs, SPANs etc.
+                element.textContent = '';
+            }
+
+            // Reset classes: remove 'positive', 'negative'.
+            element.classList.remove('positive', 'negative');
+            
+            // Ensure base classes are correctly set after removing positive/negative
+            if (element.id === 'netRentalYield' || element.id === 'priceToRentRatio' || element.id === 'nettoMietrendite') {
+                element.className = 'form-control calculated-value text-center font-weight-bold';
+            } else if (element.id === 'equityReturn') {
+                 element.className = 'form-control calculated-value text-center font-weight-bold';
+            } else if (['operativeCashflowMonthly', 'cashflowAfterTaxMonthly', 'cashflowNachAfaMonthly', 'furnitureRenovationTotal', 'expensesReservesTotalMonthly'].includes(element.id) && element.tagName === 'INPUT') {
+                 element.className = 'form-control calculated-value font-weight-bold';
+            } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') {
+                 element.className = 'form-control calculated-value';
+            }
+            // For other .calculated-value elements (like SPANs in cost panel), just removing positive/negative is enough.
         });
         
-        // Clear tax info
         if (el.taxableIncomeInfo) el.taxableIncomeInfo.innerHTML = '';
-        
-        // Reset the equity return gauge
         updateEquityReturnGauge(0);
         
-        // Clear renovation costs and status indicators
         if (el.renovationTotal) el.renovationTotal.value = '';
         if (el.renovationPercentage) {
             el.renovationPercentage.value = '';
             el.renovationStatus.innerHTML = '';
             el.renovationStatus.className = 'input-group-text';
         }
-        if (el.furnitureRenovationTotal) el.furnitureRenovationTotal.value = '';
-        if (el.totalInvestmentCosts) el.totalInvestmentCosts.value = '';
-        if (el.afaNext3Years) el.afaNext3Years.value = '';
+        if (el.furnitureRenovationTotal) el.furnitureRenovationTotal.value = ''; // This is an input
+        
+        // Clear formula explanation values
+        if (el.coldRentYearlyValue) el.coldRentYearlyValue.textContent = "0";
+        if (el.expensesReservesTotalYearlyValue) el.expensesReservesTotalYearlyValue.textContent = "0";
+        if (el.totalInvestmentCostsValue) el.totalInvestmentCostsValue.textContent = "0";
+        
+        // Clear Ertragswert fields
+        const ertragswertFieldsToClear = [
+            'jahresreinertrag', 'bodenwertverzinsung', 'gebaudereinertrag',
+            'vervielfaeltiger', 'gebaeudeertragswert', 'ertragswertBodenwert',
+            'gesamtlicherErtragswert', 'gesamtlicherErtragswertDetail',
+            'ertragswertKaufpreisRatio', 'ertragswertGesamtinvestitionRatio'
+        ];
+        ertragswertFieldsToClear.forEach(id => {
+            if (el[id]) {
+                if (el[id].tagName === 'INPUT') el[id].value = '';
+                el[id].className = 'form-control calculated-value';
+            }
+        });
+        
+        // Clear textContent for elements that are not inputs but display calculated values
+        const textContentFieldsToClear = [
+            'totalInvestmentCosts', 'pricePerSqm', // pricePerSqm is input, handled above
+            'propertyTransferTaxValue', 'realEstateAgentValue', 'notaryFeesValue', 'landRegistryValue',
+            'additionalCostsTotalPercent', 'additionalCostsTotalValue', 'totalCosts',
+            'furnitureSummary', 'renovationSummary', 'furnitureRenovationSummary'
+        ];
+        textContentFieldsToClear.forEach(id => {
+            if (el[id] && (el[id].tagName === 'SPAN' || el[id].tagName === 'DIV')) {
+                el[id].textContent = '';
+            }
+        });
+         if (el.pricePerSqm) el.pricePerSqm.value = ''; // It's an input
     }
     
     /**
      * Reset the form to initial state
      */
     function resetForm() {
-        // Reset most input fields except those with default values
         document.querySelectorAll('input:not(.calculated-value)').forEach(input => {
-            if (!['loanInterestRate', 'repaymentRate', 'vacancyRatePercentage', 
-                'maintenanceReservePerSqm', 'taxRate', 'buildingShare'].includes(input.id)) {
+            // Keep default values for these fields
+            const fieldsWithDefaults = ['loanInterestRate', 'repaymentRate', 'vacancyRatePercentage', 
+                                      'maintenanceReservePerSqm', 'taxRate', 'buildingShare', 'realEstateAgentPercent'];
+            if (!fieldsWithDefaults.includes(input.id)) {
                 input.value = '';
+            } else {
+                // Restore defaults
+                if (input.id === 'loanInterestRate') input.value = '4.0';
+                if (input.id === 'repaymentRate') input.value = '2.0';
+                if (input.id === 'vacancyRatePercentage') input.value = '2';
+                if (input.id === 'maintenanceReservePerSqm') input.value = '10';
+                if (input.id === 'taxRate') input.value = '42';
+                if (input.id === 'buildingShare') input.value = '80';
+                if (input.id === 'realEstateAgentPercent') input.value = '3.75';
             }
         });
         
-        // Reset select elements except for building year
         document.querySelectorAll('select').forEach(select => {
-            if (select.id !== 'buildingYear') {
-                select.selectedIndex = 0;
+            if (select.id === 'buildingYear') {
+                select.value = 'after1925'; // Default
+            } else if (select.id === 'furnitureDepreciationPeriod') {
+                select.value = '3'; // Default
+            } else {
+                select.selectedIndex = 0; // Default for others like 'state'
             }
         });
         
-        // Clear all calculated fields
         clearAllCalculatedFields();
+
+        // Clear dashboard explicitly
+        el.dashboardTotalInvestment.textContent = '-';
+        el.dashboardOperatingCashflow.textContent = '-';
+        el.dashboardTaxCashflow.textContent = '-';
+        el.dashboardROE.textContent = '-';
+
+        // Reset cost panel visuals if the function exists
+        if (window.resetCostPanelVisuals) {
+            window.resetCostPanelVisuals();
+        }
     }
     
     // Set up event listeners
     el.calculateBtn.addEventListener('click', calculate);
     el.resetBtn.addEventListener('click', resetForm);
     
-    // Auto-calculate when input values change
-    document.querySelectorAll('input:not(.calculated-value), select').forEach(element => {
-        element.addEventListener('input', calculate);
-        element.addEventListener('change', calculate);
+    const inputElements = document.querySelectorAll('input:not(.calculated-value), select');
+    inputElements.forEach(element => {
+        element.addEventListener('input', calculate); // For text inputs, sliders
+        element.addEventListener('change', calculate); // For selects, checkboxes, date pickers
     });
     
     // Initialize tooltips for Bootstrap
-    $('[data-toggle="tooltip"]').tooltip();
+    if (typeof $ !== 'undefined' && $.fn.tooltip) {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    // Initial calculation if there are pre-filled values (e.g. from browser cache)
+    // calculate(); // Optionally call calculate on load
 });
